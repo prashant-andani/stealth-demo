@@ -45,10 +45,10 @@ const List = ( {data} ) => {
 
   return (<table {...getTableProps()} className="table-auto w-full">
       <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()} className="bg-gray-200">
-            {headerGroup.headers.map((column) => (
-              <th
+        {headerGroups.map((headerGroup, i) => (
+          <tr key={i} {...headerGroup.getHeaderGroupProps()} className="bg-gray-200">
+            {headerGroup.headers.map((column, i) => (
+              <th key={i}
                 {...column.getHeaderProps()}
                 className="p-2 font-bold text-left"
               >
@@ -62,9 +62,9 @@ const List = ( {data} ) => {
         {rows.map((row) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => (
-                <td
+            <tr key={row.id} {...row.getRowProps()}>
+              {row.cells.map((cell, i) => (
+                <td key={i}
                   {...cell.getCellProps()}
                   className="p-2 border-t border-gray-200"
                 >

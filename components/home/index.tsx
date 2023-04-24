@@ -1,17 +1,10 @@
 "use client"
 
 import {useState, useEffect} from 'react';
-import Card from "@/components/home/card";
-import Balancer from "react-wrap-balancer";
-import { DEPLOY_URL } from "@/lib/constants";
-import { Github, Twitter } from "@/components/shared/icons";
-import WebVitals from "@/components/home/web-vitals";
-import Add from "@/components/home/add";
-import Image from "next/image";
-import { nFormatter } from "@/lib/utils";
+import Card from "./card";
+import Add from "./add";
 import List from './list';
 export default function Home() {
-  
   const [allRecords, setAllRecords] = useState([]);
   const [recordId, setRecordId] = useState(0);
 
@@ -27,20 +20,19 @@ export default function Home() {
     fetchAllRecords();
   }, [recordId]);
 
-  const getComponent = (title) => {
+  const getComponent = (title: number) => {
     let component = {
-      add: <Add onAddSuccess={(id)=> {console.log(id); setRecordId(id)} }/>,
-      list: <List data={allRecords}/>
+      1: <Add onAddSuccess={(id)=> {setRecordId(id); return ''} }/>,
+      2: <List data={allRecords}/>
     }
     return component[title];
   };
 
   return (
       <div className="">
-        {features.map(({ title, list, demo, large }) => (
+        {features.map(({ title, large }) => (
           <Card
             key={title}
-            title={""}
             demo={
               getComponent(title)
             }
@@ -53,11 +45,11 @@ export default function Home() {
 
 const features = [
   {
-    title: "add",
+    title: 1,
     large: true,
   },
   {
-    title: "list",
+    title: 2,
     large: true,
   },
   

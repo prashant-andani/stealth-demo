@@ -1,22 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useDemoModal } from "@/components/home/demo-modal";
-import Popover from "@/components/shared/popover";
-import Tooltip from "@/components/shared/tooltip";
-import { ChevronDown } from "lucide-react";
+import React, { useState } from "react";
 
-export default function Add({onAddSuccess}) {
-  const [openPopover, setOpenPopover] = useState(false);
-  const [productName, setProductName] = useState("crocin");
-  const [totalPrice, setTotalPrice] = useState(2);
-  const [quantity, setQuantity] = useState(4);
+interface Props {
+  onAddSuccess: (id: number)=> {}
+}
+export default function Add(props: Props) {
+  
+  const [productName, setProductName] = useState("");
+  const [totalPrice, setTotalPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
   const [recordAction, setRecordAction] = useState("add");
-  const [record, setRecord] = useState('');
 
   const saveRecord = async () => {
     if (productName && totalPrice && quantity) {
-      const record = { id: "", productName, totalPrice: parseInt(totalPrice), quantity: parseInt(quantity) };
+      const record = { id: "", productName, totalPrice: parseInt(totalPrice, 10), quantity: parseInt(quantity, 10) };
       // ...
       try {
         if (recordAction == "edit") {
@@ -42,7 +40,7 @@ export default function Add({onAddSuccess}) {
           });
 
           const newRecord = await res.json();
-          onAddSuccess(newRecord.id);
+          props.onAddSuccess(newRecord.id);
           console.log("Create successful", { newRecord });
           // add to notes list (global context state)
           // setRecord({ record: newRecord, type: "add" });
@@ -59,7 +57,7 @@ export default function Add({onAddSuccess}) {
         <div className="mb-4">
           <label
             className="mb-2 block font-bold text-gray-700"
-            for="product-name"
+            htmlFor="product-name"
           >
             Product Name
           </label>
@@ -69,36 +67,36 @@ export default function Add({onAddSuccess}) {
             type="text"
             placeholder="Enter product name"
             value={productName}
-            onChange={(e) => setProductName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProductName(e.target.value)}
           />
         </div>
         <div className="mb-4">
-          <label className="mb-2 block font-bold text-gray-700" for="quantity">
+          <label className="mb-2 block font-bold text-gray-700" htmlFor="quantity">
             Quantity
           </label>
           <input
             className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
             id="quantity"
-            type="number"
+            type="text"
             placeholder="Enter quantity"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuantity(e.target.value)}
           />
         </div>
         <div className="mb-4">
           <label
             className="mb-2 block font-bold text-gray-700"
-            for="total-price"
+            htmlFor="total-price"
           >
             Total Price
           </label>
           <input
             className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
             id="total-price"
-            type="number"
+            type="text"
             placeholder="Enter total price"
             value={totalPrice}
-            onChange={(e) => setTotalPrice(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTotalPrice(e.target.value)}
           />
         </div>
         <div className="flex items-center justify-between">

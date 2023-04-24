@@ -2,18 +2,22 @@ import prisma from "./prisma";
 
 // READ
 //get unique note by id
+export const getAllRecords = async()=> {
+  const record = await prisma.record.findMany();
+  return record;
+}
 export const getRecordById = async (id) => {
-  const note = await prisma.record.findUnique({
+  const record = await prisma.record.findUnique({
     where: {
       id,
     },
   });
-  return note;
+  return record;
 };
 
 // CREATE
 export const createRecord = async (productName, quantity, totalPrice) => {
-  const newRecord = await prisma.note.create({
+  const newRecord = await prisma.record.create({
     data: {
       productName,
       quantity,

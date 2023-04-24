@@ -9,49 +9,93 @@ import { ChevronDown } from "lucide-react";
 export default function ComponentGrid() {
   const { DemoModal, setShowDemoModal } = useDemoModal();
   const [openPopover, setOpenPopover] = useState(false);
-  return (
-    <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-      <DemoModal />
-      <button
-        onClick={() => setShowDemoModal(true)}
-        className="flex w-40 items-center justify-center rounded-md border border-gray-300 px-3 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
-      >
-        <p className="text-gray-600">Modal</p>
-      </button>
-      <Popover
-        content={
-          <div className="w-full rounded-md bg-white p-2 sm:w-40">
-            <button className="flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100 active:bg-gray-200">
-              Item 1
-            </button>
-            <button className="flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100 active:bg-gray-200">
-              Item 2
-            </button>
-            <button className="flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100 active:bg-gray-200">
-              Item 3
-            </button>
-          </div>
+  const [productName, setProductName] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [quantity, setQuantity] = useState(0);
+  const [recordAction, setRecordAction] = useState("add");
+
+  const saveRecord = async () => {
+    if (productName && totalPrice && quantity) {
+      const record = { id: "", productName, totalPrice, quantity };
+      // ...
+      try {
+        if (recordAction == "edit") {
+          // add note id to note data
+          // record["id"] = recordId;
+          // send request to edit note
+          let res = await fetch("/api/note", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(record),
+          });
+          // update note
+          const updateRecord = await res.json();
+          console.log("Update successful", { updateRecord });
+          // edit in notes list
+          // setRecord({ record: updateRecord, type: "edit" });
+        } else {
+          // send create request with note data
+          let res = await fetch("/api/record", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(record),
+          });
+
+          const newRecord = await res.json();
+          console.log("Create successful", { newRecord });
+          // add to notes list (global context state)
+          // setRecord({ record: newRecord, type: "add" });
         }
-        openPopover={openPopover}
-        setOpenPopover={setOpenPopover}
+      } catch (e) {
+        console.log("error caught", e);
+      }
+    }
+  };
+
+  return <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+    <div className="p-4">
+  <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="mb-4">
+      <label className="block text-gray-700 font-bold mb-2" for="product-name">
+        Product Name
+      </label>
+      <input
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="product-name"
+        type="text"
+        placeholder="Enter product name"
       >
-        <button
-          onClick={() => setOpenPopover(!openPopover)}
-          className="flex w-40 items-center justify-between rounded-md border border-gray-300 px-4 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
-        >
-          <p className="text-gray-600">Popover</p>
-          <ChevronDown
-            className={`h-4 w-4 text-gray-600 transition-all ${
-              openPopover ? "rotate-180" : ""
-            }`}
-          />
-        </button>
-      </Popover>
-      <Tooltip content="Precedent is an opinionated collection of components, hooks, and utilities for your Next.js project.">
-        <div className="flex w-40 cursor-default items-center justify-center rounded-md border border-gray-300 px-3 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100">
-          <p className="text-gray-600">Tooltip</p>
-        </div>
-      </Tooltip>
     </div>
-  );
+    <div className="mb-4">
+      <label className="block text-gray-700 font-bold mb-2" for="quantity">
+        Quantity
+      </label>
+      <input
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="quantity"
+        type="number"
+        placeholder="Enter quantity"
+      >
+    </div>
+    <div className="mb-4">
+      <label className="block text-gray-700 font-bold mb-2" for="total-price">
+        Total Price
+      </label>
+      <input
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        id="total-price"
+        type="number"
+        placeholder="Enter total price"
+      >
+    </div>
+    <div className="flex items-center justify-between">
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+
+    
+  </div>;
 }

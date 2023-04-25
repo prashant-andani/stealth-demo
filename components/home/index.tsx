@@ -16,6 +16,18 @@ export default function Home() {
     setAllRecords(await res.json());
   }
 
+
+  const getRecordCount = async () => {
+    let res = await fetch("/api/record", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    setAllRecords(await res.json());
+  }
+
+
+  
+
   useEffect(()=> {
     fetchAllRecords();
   }, [recordId]);

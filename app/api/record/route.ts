@@ -1,4 +1,4 @@
-import { createRecord, getAllRecords } from "../../../prisma/Record";
+import { createRecord, getAllRecords, getRecordCount } from "../../../prisma/Record";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

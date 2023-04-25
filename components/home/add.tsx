@@ -1,18 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
+import { useSaveModal } from "./save-modal";
+
 
 interface Props {
   onAddSuccess: (id: number)=> {}
 }
 export default function Add(props: Props) {
-  
+  const { SaveModal, setShowSaveModal } = useSaveModal();
   const [productName, setProductName] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [recordAction, setRecordAction] = useState("add");
+  const [isSaveProgress, setIsSaveProgress] = useState(false);
 
   const saveRecord = async () => {
+    setIsSaveProgress(true);
     if (productName && totalPrice && quantity) {
       const record = { id: "", productName, totalPrice: parseInt(totalPrice, 10), quantity: parseInt(quantity, 10) };
       // ...
@@ -41,18 +45,24 @@ export default function Add(props: Props) {
 
           const newRecord = await res.json();
           props.onAddSuccess(newRecord.id);
+          setIsSaveProgress(false);
+          setShowSaveModal(true)
           console.log("Create successful", { newRecord });
           // add to notes list (global context state)
           // setRecord({ record: newRecord, type: "add" });
         }
       } catch (e) {
         console.log("error caught", e);
+        
+        setIsSaveProgress(false);
       }
     }
   };
 
   return (
     <div className="p-4">
+      <SaveModal />
+
       <form className="px-8 pt-14">
         <div className="mb-4">
           <label
@@ -104,8 +114,10 @@ export default function Add(props: Props) {
             className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
             type="button"
             onClick={saveRecord}
+            disabled={isSaveProgress}
           >
-            Submit
+            {isSaveProgress && "Saving..."}
+            {!isSaveProgress && "Save"}
           </button>
          
         </div>

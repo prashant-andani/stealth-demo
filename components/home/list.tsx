@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { useTable } from 'react-table';
 import 'tailwindcss/tailwind.css';
+import {format} from 'date-fns';
 
 const List = ( {data} ) => {
     console.log(data);
@@ -22,7 +23,10 @@ const List = ( {data} ) => {
       },
       {
         Header: 'Date',
-        accessor: 'date',
+        accessor: 'dateTime',
+        Cell: ({ row: { original } }) => (
+            <span>{format(new Date(original.dateTime), "dd-MM-yyyy")}</span>
+        ),
       },
     ],
     []
